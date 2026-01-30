@@ -8,7 +8,7 @@ type PageProps = {
   params: { slug: string };
 };
 
-// 🔹 Dynamic metadata (title, description, OG)
+// 🔹 Dynamic metadata (title, description, OG, Twitter)
 export async function generateMetadata(
   { params }: PageProps
 ): Promise<Metadata> {
@@ -26,6 +26,7 @@ export async function generateMetadata(
   return {
     title,
     description: course.description,
+
     openGraph: {
       title,
       description: course.description,
@@ -37,6 +38,14 @@ export async function generateMetadata(
           alt: course.name,
         },
       ],
+    },
+
+    // ✅ Twitter / X card metadata
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: course.description,
+      images: [course.imageUrl],
     },
   };
 }
