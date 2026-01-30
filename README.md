@@ -1,0 +1,1 @@
+# starthub-course-detail-nextjs-seo
