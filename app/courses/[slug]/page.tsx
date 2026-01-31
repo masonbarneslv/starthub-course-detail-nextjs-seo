@@ -103,20 +103,19 @@ export default async function CoursePage({ params }: any) {
           <p className="mt-4 max-w-2xl text-slate-700">{course.description}</p>
         </header>
 
-        {/* ✅ Image addon: capped height for better mobile UX */}
-        <section aria-label="Course image">
-          <div className="overflow-hidden rounded-2xl border border-slate-200">
-            <Image
-              src={course.imageUrl}
-              alt={course.name}
-              width={1600}
-              height={900}
-              priority
-              className="h-auto w-full object-cover max-h-[420px]"
-              sizes="(max-width: 768px) 100vw, 896px"
-            />
-          </div>
-        </section>
+        {/* Course image */}
+<section aria-label="Course image" className="mt-6">
+  <div className="relative h-[180px] sm:h-[240px] lg:h-[300px] overflow-hidden rounded-2xl border border-slate-200">
+    <Image
+      src={course.imageUrl}
+      alt={course.name}
+      fill
+      priority
+      className="object-cover"
+      sizes="(max-width: 768px) 100vw, 896px"
+    />
+  </div>
+</section>
       </article>
     </main>
   );
