@@ -3,19 +3,18 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllCourses, getCourseBySlug } from "@/lib/courses";
 
-// ✅ Pre-generate static params for performance
 export async function generateStaticParams() {
   const courses = await getAllCourses();
   return courses.map((c) => ({ slug: c.slug }));
 }
 
-// ✅ Dynamic metadata (Next.js 15–safe typing)
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const course = await getCourseBySlug(params.slug);
+  const { slug } = await params;
+  const course = await getCourseBySlug(slug);
 
   if (!course) {
     return {
@@ -59,12 +58,12 @@ export async function generateMetadata({
 export default async function CoursePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const course = await getCourseBySlug(params.slug);
+  const { slug } = await params;
+  const course = await getCourseBySlug(slug);
   if (!course) notFound();
 
-  // ✅ JSON-LD Course schema
   const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
@@ -95,7 +94,7 @@ export default async function CoursePage({
           <p className="mt-4 max-w-2xl text-slate-700">{course.description}</p>
         </header>
 
-        <section className="mb-10">
+        <section className="mb-10" aria-label="Course image">
           <div className="overflow-hidden rounded-2xl border border-slate-200">
             <Image
               src={course.imageUrl}
@@ -106,6 +105,18 @@ export default async function CoursePage({
               className="h-auto w-full object-cover"
               sizes="(max-width: 768px) 100vw, 896px"
             />
+          </div>
+        </section>
+
+        <section aria-label="Course outcomes" className="grid gap-6">
+          <div className="rounded-2xl border border-slate-200 p-6">
+            <h2 className="text-lg font-semibold">What you’ll learn</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-700">
+              <li>SEO-friendly server-side rendering patterns</li>
+              <li>Dynamic metadata + Open Graph tags</li>
+              <li>JSON-LD structured data for rich results</li>
+              <li>Performance-first Next.js App Router fundamentals</li>
+            </ul>
           </div>
         </section>
       </article>
