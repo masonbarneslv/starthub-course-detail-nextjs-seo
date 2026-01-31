@@ -24,6 +24,7 @@ export default async function HomePage() {
               <li key={course.slug}>
                 <Link
                   href={`/courses/${course.slug}`}
+                  prefetch={false}
                   className="block rounded-xl border border-slate-200 px-5 py-4 hover:bg-slate-50"
                 >
                   <div className="font-medium">{course.name}</div>
