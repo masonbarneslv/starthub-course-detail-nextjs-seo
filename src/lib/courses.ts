@@ -1,5 +1,3 @@
-// src/lib/courses.ts
-
 export type Course = {
   slug: string;
   name: string;
@@ -8,56 +6,27 @@ export type Course = {
   imageUrl: string;
 };
 
-/**
- * Mock course data.
- * In a real app this would come from an API or database,
- * but for this task we intentionally mock it.
- */
-const COURSES: Course[] = [
+const courses: Course[] = [
   {
-    slug: "startup-seo-foundations",
-    name: "Startup SEO Foundations",
-    description:
-      "Learn the fundamentals of technical SEO, on-page strategy, and performance best practices for modern web applications.",
+    slug: "seo-nextjs-foundations",
+    name: "SEO Next.js Foundations",
+    description: "Learn SSR, metadata, OG tags, and JSON-LD in Next.js App Router.",
     providerName: "StartHub Academy",
-    imageUrl:
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80"
   },
   {
-    slug: "nextjs-for-marketing-sites",
-    name: "Next.js for High-Performance Marketing Sites",
-    description:
-      "Build fast, SEO-friendly marketing pages using Next.js App Router, server-side rendering, metadata APIs, and structured data.",
+    slug: "technical-seo-for-devs",
+    name: "Technical SEO for Developers",
+    description: "Core Web Vitals, structured data, and performance-first patterns.",
     providerName: "StartHub Academy",
-    imageUrl:
-      "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1600&q=80",
-  },
-  {
-    slug: "schema-rich-snippets",
-    name: "Schema & Rich Snippets for Growth",
-    description:
-      "Implement JSON-LD schema markup to improve search appearance, enable rich snippets, and help Google better understand your content.",
-    providerName: "StartHub Academy",
-    imageUrl:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80",
-  },
+    imageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80"
+  }
 ];
 
-/**
- * Fetch a single course by slug.
- * Simulates a real async data request.
- */
-export async function getCourseBySlug(slug: string): Promise<Course | null> {
-  // Simulate network latency
-  await new Promise((resolve) => setTimeout(resolve, 150));
-
-  return COURSES.find((course) => course.slug === slug) ?? null;
+export async function getAllCourses(): Promise<Course[]> {
+  return courses;
 }
 
-/**
- * Fetch all courses.
- * Used for the homepage list.
- */
-export async function getAllCourses(): Promise<Course[]> {
-  return COURSES;
+export async function getCourseBySlug(slug: string): Promise<Course | null> {
+  return courses.find((c) => c.slug === slug) ?? null;
 }
