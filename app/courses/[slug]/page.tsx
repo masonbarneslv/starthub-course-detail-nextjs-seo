@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getCourseBySlug } from "@/lib/courses";
+import { getAllCourses, getCourseBySlug } from "@/lib/courses";
 
 type PageProps = {
-  params: { slug: string
+  params: { slug: string };
 };
 
-// ✅ Dynamic metadata (title, description, OG) based on course data
+// ✅ Helps performance: prebuild known slugs (SSG-style)
+export async function generateStaticParams() {
+  const courses = await getAllCourses();
+  return courses.map((c) => ({ slug: c.slug }));
+}
+
+// ✅ Dynamic metadata (title, description, OG) based on mock course data
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -28,9 +34,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: {
-      canonical: canonicalPath,
-    },
+    alternates: { canonical: canonicalPath },
     openGraph: {
       title,
       description,
@@ -73,7 +77,7 @@ export default async function CoursePage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      {/* ✅ Structured Data */}
+      {/* ✅ Structured Data for rich results */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
@@ -90,7 +94,7 @@ export default async function CoursePage({ params }: PageProps) {
           <p className="mt-4 max-w-2xl text-slate-700">{course.description}</p>
         </header>
 
-        <section className="mb-10">
+        <section className="mb-10" aria-label="Course image">
           <div className="overflow-hidden rounded-2xl border border-slate-200">
             <Image
               src={course.imageUrl}
@@ -104,7 +108,7 @@ export default async function CoursePage({ params }: PageProps) {
           </div>
         </section>
 
-        <section className="grid gap-6">
+        <section aria-label="Course outcomes" className="grid gap-6">
           <div className="rounded-2xl border border-slate-200 p-6">
             <h2 className="text-lg font-semibold">What you’ll learn</h2>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-700">
