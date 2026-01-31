@@ -12,7 +12,7 @@ export async function generateStaticParams() {
 }
 
 /* -------------------------------------
-   Helper: params can be object OR Promise
+   Helper: params can be object OR Promise in Next 15 builds
 ------------------------------------- */
 async function getSlug(params: any): Promise<string | undefined> {
   const resolved = await Promise.resolve(params);
@@ -35,22 +35,14 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   }
 
   const title = `${course.name} | ${course.provider.name}`;
-  const canonicalPath = `/courses/${course.slug}`;
 
   return {
     title,
     description: course.description,
-
-    // ✅ Canonical URL (critical for Lighthouse SEO)
-    alternates: {
-      canonical: canonicalPath,
-    },
-
     openGraph: {
       title,
       description: course.description,
       type: "website",
-      url: canonicalPath,
       images: [
         {
           url: course.imageUrl,
@@ -60,7 +52,6 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
         },
       ],
     },
-
     twitter: {
       card: "summary_large_image",
       title,
@@ -85,7 +76,6 @@ export default async function CoursePage({ params }: any) {
     "@type": "Course",
     name: course.name,
     description: course.description,
-    url: `/courses/${course.slug}`,
     provider: {
       "@type": "Organization",
       name: course.provider.name,
@@ -95,7 +85,6 @@ export default async function CoursePage({ params }: any) {
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      {/* Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
@@ -111,24 +100,22 @@ export default async function CoursePage({ params }: any) {
             {course.name}
           </h1>
 
-          <p className="mt-4 max-w-2xl text-slate-700">
-            {course.description}
-          </p>
+          <p className="mt-4 max-w-2xl text-slate-700">{course.description}</p>
         </header>
 
         {/* Course image */}
-        <section aria-label="Course image" className="mt-6">
-          <div className="relative h-[180px] sm:h-[240px] lg:h-[300px] overflow-hidden rounded-2xl border border-slate-200">
-            <Image
-              src={course.imageUrl}
-              alt={course.name}
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 896px"
-            />
-          </div>
-        </section>
+<section aria-label="Course image" className="mt-6">
+  <div className="relative h-[180px] sm:h-[240px] lg:h-[300px] overflow-hidden rounded-2xl border border-slate-200">
+    <Image
+      src={course.imageUrl}
+      alt={course.name}
+      fill
+      priority
+      className="object-cover"
+      sizes="(max-width: 768px) 100vw, 896px"
+    />
+  </div>
+</section>
       </article>
     </main>
   );
