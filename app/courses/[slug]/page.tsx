@@ -16,19 +16,26 @@ export async function generateMetadata({
   if (!course) {
     return {
       title: "Course not found",
+      description: "The requested course could not be found.",
       robots: { index: false, follow: false },
     };
   }
 
-  const title = `${course.name} | ${course.providerName}`;
+  const title = `${course.name} | ${course.provider.name}`;
+  const description = course.description;
+  const canonicalPath = `/courses/${course.slug}`;
 
   return {
     title,
-    description: course.description,
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
       title,
-      description: course.description,
+      description,
       type: "website",
+      url: canonicalPath,
       images: [
         {
           url: course.imageUrl,
@@ -41,7 +48,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title,
-      description: course.description,
+      description,
       images: [course.imageUrl],
     },
   };
@@ -49,9 +56,9 @@ export async function generateMetadata({
 
 export default async function CoursePage({ params }: PageProps) {
   const course = await getCourseBySlug(params.slug);
-  if (!course) return notFound();
+  if (!course) notFound();
 
-  // ✅ JSON-LD structured data for Course
+  // ✅ JSON-LD structured data for Course (Schema.org)
   const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
@@ -59,7 +66,8 @@ export default async function CoursePage({ params }: PageProps) {
     description: course.description,
     provider: {
       "@type": "Organization",
-      name: course.providerName,
+      name: course.provider.name,
+      ...(course.provider.url ? { sameAs: course.provider.url } : {}),
     },
   };
 
@@ -74,7 +82,7 @@ export default async function CoursePage({ params }: PageProps) {
       <article className="mx-auto w-full max-w-4xl px-6 py-12">
         <header className="mb-8">
           <p className="text-sm font-medium text-slate-500">
-            {course.providerName}
+            {course.provider.name}
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight">
             {course.name}
@@ -91,6 +99,7 @@ export default async function CoursePage({ params }: PageProps) {
               height={900}
               priority
               className="h-auto w-full object-cover"
+              sizes="(max-width: 768px) 100vw, 896px"
             />
           </div>
         </section>
