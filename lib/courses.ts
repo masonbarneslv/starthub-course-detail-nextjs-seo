@@ -12,7 +12,7 @@ export type Course = {
 const COURSES: Course[] = [
   {
     slug: "nextjs-seo",
-    name: "Next.js SEO Engineering",
+    name: "Next.js SEO Engineeri",
     description:
       "Build fast, SEO-optimized pages with SSR, dynamic metadata, Open Graph, and JSON-LD structured data.",
     provider: {
