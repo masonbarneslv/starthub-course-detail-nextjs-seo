@@ -27,7 +27,7 @@ export default async function HomePage() {
                 >
                   <div className="font-medium">{course.name}</div>
                   <div className="mt-1 text-sm text-slate-600">
-                    Provider: {course.providerName} •{" "}
+                    Provider: {course.provider.name} •{" "}
                     <span className="font-mono">/{course.slug}</span>
                   </div>
                 </Link>
