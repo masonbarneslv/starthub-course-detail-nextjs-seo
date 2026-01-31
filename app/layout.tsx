@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"), // ✅ change to your real domain if you have one
+  // Helps OG/canonical become absolute if needed.
+  // If you don’t have a real domain yet, leaving example.com is okay.
+  metadataBase: new URL("https://example.com"),
   title: "StartHub Courses",
   description: "SEO-optimized course detail pages built with Next.js",
 };
