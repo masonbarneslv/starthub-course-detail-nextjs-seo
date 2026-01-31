@@ -10,3 +10,12 @@ html, body {
 body {
   margin: 0;
 }
+
+/* Ensure links are always clickable (prevents accidental pointer-events overrides) */
+a, a * {
+  pointer-events: auto !important;
+}
+
+a {
+  cursor: pointer;
+}
