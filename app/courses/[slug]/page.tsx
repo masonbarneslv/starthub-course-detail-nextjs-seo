@@ -1,30 +1,36 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { getAllCourses, getCourseBySlug } from "@/lib/courses";
 
-        <section className="mb-10" aria-label="Course image">
-          <div className="overflow-hidden rounded-2xl border border-slate-200">
-            <Image
-              src={course.imageUrl}
-              alt={course.name}
-              width={1600}
-              height={900}
-              priority
-              className="h-auto w-full object-cover"
-              sizes="(max-width: 768px) 100vw, 896px"
-            />
-          </div>
-        </section>
+type PageProps = {
+  params: { slug: string };
+};
 
-        <section aria-label="Course outcomes" className="grid gap-6">
-          <div className="rounded-2xl border border-slate-200 p-6">
-            <h2 className="text-lg font-semibold">What you’ll learn</h2>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-700">
-              <li>SEO-friendly server-side rendering patterns</li>
-              <li>Dynamic metadata + Open Graph tags</li>
-              <li>JSON-LD structured data for rich results</li>
-              <li>Performance-first Next.js App Router fundamentals</li>
-            </ul>
-          </div>
-        </section>
-      </article>
-    </main>
-  );
+// ✅ Helps performance: prebuild known slugs (SSG-style)
+export async function generateStaticParams() {
+  const courses = await getAllCourses();
+  return courses.map((c) => ({ slug: c.slug }));
 }
+
+// ✅ Dynamic metadata (title, description, OG) based on mock course data
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const course = await getCourseBySlug(params.slug);
+
+  if (!course) {
+    return {
+      title: "Course not found",
+      description: "The requested course could not be found.",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const title = `${course.name} | ${course.provider.name}`;
+  const description = course.description;
+  const canonicalPath = `/courses/${course.slug}`;
+
+  return {
+    title,
+    description,
