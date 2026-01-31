@@ -2,8 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "StartHub Courses",
-  description: "SEO-optimized course detail pages built with Next.js",
+  metadataBase: new URL("https://starthub-course-detail-nextjs-seo.vercel.app"),
+  title: {
+    default: "StartHub Academy",
+    template: "%s | StartHub Academy",
+  },
+  description:
+    "SEO-optimized course pages built with Next.js, SSR, Open Graph, and JSON-LD structured data.",
+  openGraph: {
+    type: "website",
+    siteName: "StartHub Academy",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
