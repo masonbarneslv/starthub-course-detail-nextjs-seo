@@ -3,17 +3,28 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllCourses, getCourseBySlug } from "@/lib/courses";
 
+/* -------------------------------------
+   Pre-build known course slugs
+------------------------------------- */
 export async function generateStaticParams() {
   const courses = await getAllCourses();
   return courses.map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const course = await getCourseBySlug(params.slug);
+/* -------------------------------------
+   Helper: params can be object OR Promise in some builds
+------------------------------------- */
+async function getSlug(params: any): Promise<string | undefined> {
+  const resolved = await Promise.resolve(params);
+  return resolved?.slug;
+}
+
+/* -------------------------------------
+   Dynamic metadata (SEO + Open Graph)
+------------------------------------- */
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const slug = await getSlug(params);
+  const course = slug ? await getCourseBySlug(slug) : null;
 
   if (!course) {
     return {
@@ -50,14 +61,16 @@ export async function generateMetadata({
   };
 }
 
-export default async function CoursePage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const course = await getCourseBySlug(params.slug);
+/* -------------------------------------
+   Course detail page
+------------------------------------- */
+export default async function CoursePage({ params }: any) {
+  const slug = await getSlug(params);
+  const course = slug ? await getCourseBySlug(slug) : null;
+
   if (!course) notFound();
 
+  // ✅ JSON-LD structured data for Course
   const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
