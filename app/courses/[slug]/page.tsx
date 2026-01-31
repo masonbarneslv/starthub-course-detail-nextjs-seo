@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getCourseBySlug } from "@/lib/courses";
 
 type PageProps = {
-  params: { slug: string };
+  params: { slug: string
 };
 
 // ✅ Dynamic metadata (title, description, OG) based on course data
