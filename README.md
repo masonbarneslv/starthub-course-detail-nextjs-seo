@@ -45,3 +45,6 @@ npm run dev
 
 npm run build
 npm run start
+
+<img width="558" height="873" alt="lighthouse-stats" src="https://github.com/user-attachments/assets/5fe953eb-ede8-40a2-9a70-b4276cde8623" />
+
