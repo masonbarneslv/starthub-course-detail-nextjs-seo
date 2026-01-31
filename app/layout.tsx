@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://example.com"), // ✅ change to your real domain if you have one
   title: "StartHub Courses",
   description: "SEO-optimized course detail pages built with Next.js",
 };
