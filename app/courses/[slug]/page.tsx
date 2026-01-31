@@ -90,38 +90,32 @@ export default async function CoursePage({ params }: any) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
       />
 
-      <article className="mx-auto w-full max-w-5xl px-6 py-12">
-        {/* HEADER (matches your screenshot style) */}
+      <article className="mx-auto w-full max-w-4xl px-6 py-12">
         <header className="mb-8">
-          {/* Provider line */}
-          <p className="text-base text-slate-700">
+          <p className="text-sm font-medium text-slate-500">
             {course.provider.name}
           </p>
 
-          {/* Big editorial title */}
-          <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight sm:text-6xl">
+          <h1 className="mt-2 text-4xl font-semibold tracking-tight">
             {course.name}
           </h1>
 
-          {/* Short description */}
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-800">
-            {course.description}
-          </p>
+          <p className="mt-4 max-w-2xl text-slate-700">{course.description}</p>
         </header>
 
-        {/* Big image directly under header */}
-        <section aria-label="Course image" className="mt-10">
-          <div className="relative h-[420px] w-full overflow-hidden rounded-none">
-            <Image
-              src={course.imageUrl}
-              alt={course.name}
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 1024px"
-            />
-          </div>
-        </section>
+        {/* Course image */}
+<section aria-label="Course image" className="mt-6">
+  <div className="relative h-[180px] sm:h-[240px] lg:h-[300px] overflow-hidden rounded-2xl border border-slate-200">
+    <Image
+      src={course.imageUrl}
+      alt={course.name}
+      fill
+      priority
+      className="object-cover"
+      sizes="(max-width: 768px) 100vw, 896px"
+    />
+  </div>
+</section>
       </article>
     </main>
   );
