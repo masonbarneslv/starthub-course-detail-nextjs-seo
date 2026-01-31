@@ -92,7 +92,7 @@ export default async function CoursePage({ params }: any) {
 
       <article className="mx-auto w-full max-w-5xl px-6 py-12">
         {/* ✅ COURSE TITLE + TEXT */}
-        <header className="relative z-10 mb-10">
+        <header className="mb-10">
           <p className="text-sm font-medium text-slate-500">
             {course.provider.name}
           </p>
@@ -106,15 +106,16 @@ export default async function CoursePage({ params }: any) {
           </p>
         </header>
 
-        {/* COURSE IMAGE */}
-        <section aria-label="Course image" className="relative z-0 mt-6">
-          <div className="relative h-[420px] w-full overflow-hidden rounded-2xl border border-slate-200">
+        {/* ✅ COURSE IMAGE (NO fill; prevents header disappearing) */}
+        <section aria-label="Course image" className="mt-6">
+          <div className="overflow-hidden rounded-2xl border border-slate-200">
             <Image
               src={course.imageUrl}
               alt={course.name}
-              fill
+              width={1600}
+              height={900}
               priority
-              className="object-cover"
+              className="h-auto w-full object-cover"
               sizes="(max-width: 768px) 100vw, 1024px"
             />
           </div>
