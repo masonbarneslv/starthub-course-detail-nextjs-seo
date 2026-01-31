@@ -39,7 +39,7 @@ data for rich search results, and performance-first rendering.
 
 ## 🚀 Lighthouse Performance
 
-![Lighthouse audit showing 100 Performance, Accessibility, and Best Practices](lighthouse-stats.png)
+![Lighthouse audit](docs/lighthouse-stats.png)
 
 **Audit Notes**
 - 100 Performance, Accessibility, Best Practices
