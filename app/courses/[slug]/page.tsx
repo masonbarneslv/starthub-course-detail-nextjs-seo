@@ -1,28 +1,30 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { getAllCourses, getCourseBySlug } from "@/lib/courses";
 
-// Prebuild known slugs (good for performance)
+/* -------------------------------------
+   Pre-build known course slugs
+------------------------------------- */
 export async function generateStaticParams() {
   const courses = await getAllCourses();
-  return courses.map((c) => ({ slug: c.slug }));
+  return courses.map((course) => ({
+    slug: course.slug,
+  }));
 }
 
-// Resolve params whether Next passes object or Promise (covers Next 15 typing weirdness)
-async function resolveParams(params: any) {
-  return await Promise.resolve(params);
-}
-
-export async function generateMetadata({ params }: any): Promise<Metadata> {
-  const p = await resolveParams(params);
-  const slug = p?.slug;
-
-  const course = slug ? await getCourseBySlug(slug) : null;
+/* -------------------------------------
+   Dynamic metadata (SEO + Open Graph)
+------------------------------------- */
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
+  const course = await getCourseBySlug(params.slug);
 
   if (!course) {
     return {
       title: "Course not found",
-      description: `No course found for slug: ${String(slug)}`,
+      description: "The requested course could not be found.",
       robots: { index: false, follow: false },
     };
   }
@@ -36,7 +38,14 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       title,
       description: course.description,
       type: "website",
-      images: [{ url: course.imageUrl, width: 1200, height: 630, alt: course.name }],
+      images: [
+        {
+          url: course.imageUrl,
+          width: 1200,
+          height: 630,
+          alt: course.name,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -47,51 +56,16 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
   };
 }
 
-export default async function CoursePage({ params }: any) {
-  const p = await resolveParams(params);
-  const slug = p?.slug;
+/* -------------------------------------
+   Course detail page
+------------------------------------- */
+export default async function CoursePage(
+  { params }: { params: { slug: string } }
+) {
+  const course = await getCourseBySlug(params.slug);
+  if (!course) notFound();
 
-  const all = await getAllCourses();
-  const course = slug ? await getCourseBySlug(slug) : null;
-
-  // ✅ TEMP DEBUG VIEW instead of 404
-  if (!course) {
-    return (
-      <main className="min-h-screen bg-white text-slate-900">
-        <article className="mx-auto w-full max-w-3xl px-6 py-12">
-          <h1 className="text-2xl font-semibold">Debug: Course not found</h1>
-          <p className="mt-2 text-slate-700">
-            The route exists, but <code>getCourseBySlug()</code> returned null.
-          </p>
-
-          <div className="mt-6 rounded border border-slate-200 p-4">
-            <div className="text-sm text-slate-600">Resolved params:</div>
-            <pre className="mt-2 overflow-auto rounded bg-slate-50 p-3 text-sm">
-{JSON.stringify(p, null, 2)}
-            </pre>
-
-            <div className="mt-4 text-sm text-slate-600">Resolved slug:</div>
-            <pre className="mt-2 overflow-auto rounded bg-slate-50 p-3 text-sm">
-{String(slug)}
-            </pre>
-
-            <div className="mt-4 text-sm text-slate-600">Available slugs:</div>
-            <pre className="mt-2 overflow-auto rounded bg-slate-50 p-3 text-sm">
-{JSON.stringify(all.map((c) => c.slug), null, 2)}
-            </pre>
-          </div>
-
-          <p className="mt-6 text-slate-700">
-            If <strong>slug is undefined</strong>, your route param is not being read.
-            If slug is correct but not in the list, your homepage links/slugs don’t match.
-            If the list is empty, your mock data isn’t being loaded in production.
-          </p>
-        </article>
-      </main>
-    );
-  }
-
-  // ✅ JSON-LD schema (still included)
+  /* JSON-LD structured data */
   const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
@@ -106,18 +80,28 @@ export default async function CoursePage({ params }: any) {
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
+      {/* Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(courseSchema),
+        }}
       />
 
       <article className="mx-auto w-full max-w-4xl px-6 py-12">
         <header className="mb-8">
-          <p className="text-sm font-medium text-slate-500">{course.provider.name}</p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight">{course.name}</h1>
-          <p className="mt-4 max-w-2xl text-slate-700">{course.description}</p>
+          <p className="text-sm font-medium text-slate-500">
+            {course.provider.name}
+          </p>
+          <h1 className="mt-2 text-4xl font-semibold tracking-tight">
+            {course.name}
+          </h1>
+          <p className="mt-4 max-w-2xl text-slate-700">
+            {course.description}
+          </p>
         </header>
 
+        {/* Image with capped height for better mobile UX */}
         <section aria-label="Course image">
           <div className="overflow-hidden rounded-2xl border border-slate-200">
             <Image
@@ -126,7 +110,7 @@ export default async function CoursePage({ params }: any) {
               width={1600}
               height={900}
               priority
-              className="h-auto w-full object-cover"
+              className="h-auto w-full object-cover max-h-[420px]"
               sizes="(max-width: 768px) 100vw, 896px"
             />
           </div>
