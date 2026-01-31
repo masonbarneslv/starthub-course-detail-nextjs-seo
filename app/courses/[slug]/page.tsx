@@ -5,8 +5,12 @@ export default async function CoursesPage() {
   const courses = await getAllCourses();
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <article className="mx-auto w-full max-w-4xl px-6 py-12">
+    <main className="relative min-h-screen bg-white text-slate-900">
+      {/* If you have ANY background/overlay layer, keep it NON-clickable */}
+      <div className="pointer-events-none absolute inset-0" />
+
+      {/* Content layer is above everything */}
+      <article className="relative z-10 mx-auto w-full max-w-4xl px-6 py-12">
         <header className="mb-8">
           <h1 className="text-5xl font-serif leading-[1.05] tracking-tight">
             Course Catalog
@@ -22,7 +26,7 @@ export default async function CoursesPage() {
             <li key={c.slug} className="list-disc pl-6">
               <Link
                 href={`/courses/${c.slug}`}
-                className="text-purple-700 underline underline-offset-2"
+                className="inline-block text-purple-700 underline underline-offset-2"
               >
                 {c.name}
               </Link>
