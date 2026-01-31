@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllCourses } from "@/lib/course
+import { getAllCourses } from "@/lib/courses";
 
 export default async function HomePage() {
   const courses = await getAllCourses();
