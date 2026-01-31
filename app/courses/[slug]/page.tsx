@@ -91,19 +91,23 @@ export default async function CoursePage({ params }: any) {
       />
 
       <article className="mx-auto w-full max-w-5xl px-6 py-12">
-        <header className="mb-8">
-          <p className="text-base text-slate-700">{course.provider.name}</p>
+        {/* ✅ COURSE TITLE + TEXT (THIS IS THE IMPORTANT PART) */}
+        <header className="mb-10">
+          <p className="text-sm font-medium text-slate-500">
+            {course.provider.name}
+          </p>
 
-          <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight sm:text-6xl">
+          <h1 className="mt-3 font-serif text-5xl leading-[1.05] tracking-tight sm:text-6xl">
             {course.name}
           </h1>
 
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-800">
+          <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-800">
             {course.description}
           </p>
         </header>
 
-        <section aria-label="Course image" className="mt-10">
+        {/* COURSE IMAGE */}
+        <section aria-label="Course image">
           <div className="relative h-[420px] w-full overflow-hidden">
             <Image
               src={course.imageUrl}
