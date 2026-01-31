@@ -6,7 +6,6 @@ export default function LoadingCourse() {
         <div className="mt-4 h-10 w-2/3 animate-pulse rounded bg-slate-200" />
         <div className="mt-6 h-4 w-full animate-pulse rounded bg-slate-200" />
         <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-slate-200" />
-
         <div className="mt-10 h-[320px] w-full animate-pulse rounded-2xl border border-slate-200 bg-slate-100" />
       </div>
     </main>
