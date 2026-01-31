@@ -37,6 +37,17 @@ data for rich search results, and performance-first rendering.
 
 ---
 
+## 🚀 Lighthouse Performance
+
+![Lighthouse audit showing 100 Performance, Accessibility, and Best Practices](lighthouse-stats.png)
+
+**Audit Notes**
+- 100 Performance, Accessibility, Best Practices
+- SEO intentionally limited due to minimal demo content
+- Full SEO implemented via dynamic metadata and JSON-LD
+
+---
+
 ## 🚀 Running the Project
 
 ```bash
@@ -46,5 +57,4 @@ npm run dev
 npm run build
 npm run start
 
-<img width="558" height="873" alt="lighthouse-stats" src="https://github.com/user-attachments/assets/5fe953eb-ede8-40a2-9a70-b4276cde8623" />
 
