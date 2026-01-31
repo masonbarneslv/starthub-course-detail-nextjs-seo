@@ -1,4 +1,4 @@
-export type Course = 
+export type Course = {
   slug: string;
   name: string;
   description: string;
