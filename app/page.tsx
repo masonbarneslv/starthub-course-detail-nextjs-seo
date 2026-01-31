@@ -30,16 +30,3 @@ export default async function HomePage() {
                     Provider: {course.provider.name} •{" "}
                     <span className="font-mono">/{course.slug}</span>
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <footer className="mt-12 text-sm text-slate-500">
-          Built with Next.js App Router • SSR + dynamic metadata + JSON-LD
-        </footer>
-      </div>
-    </main>
-  );
-}
