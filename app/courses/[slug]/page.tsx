@@ -8,18 +8,23 @@ import { getAllCourses, getCourseBySlug } from "@/lib/courses";
 ------------------------------------- */
 export async function generateStaticParams() {
   const courses = await getAllCourses();
-  return courses.map((course) => ({
-    slug: course.slug,
-  }));
+  return courses.map((c) => ({ slug: c.slug }));
+}
+
+/* -------------------------------------
+   Helper: params can be object OR Promise in Next 15 builds
+------------------------------------- */
+async function getSlug(params: any): Promise<string | undefined> {
+  const resolved = await Promise.resolve(params);
+  return resolved?.slug;
 }
 
 /* -------------------------------------
    Dynamic metadata (SEO + Open Graph)
 ------------------------------------- */
-export async function generateMetadata(
-  { params }: { params: { slug: string } }
-): Promise<Metadata> {
-  const course = await getCourseBySlug(params.slug);
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const slug = await getSlug(params);
+  const course = slug ? await getCourseBySlug(slug) : null;
 
   if (!course) {
     return {
@@ -59,13 +64,13 @@ export async function generateMetadata(
 /* -------------------------------------
    Course detail page
 ------------------------------------- */
-export default async function CoursePage(
-  { params }: { params: { slug: string } }
-) {
-  const course = await getCourseBySlug(params.slug);
+export default async function CoursePage({ params }: any) {
+  const slug = await getSlug(params);
+  const course = slug ? await getCourseBySlug(slug) : null;
+
   if (!course) notFound();
 
-  /* JSON-LD structured data */
+  // ✅ JSON-LD structured data for Course
   const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
@@ -80,12 +85,9 @@ export default async function CoursePage(
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      {/* Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(courseSchema),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
       />
 
       <article className="mx-auto w-full max-w-4xl px-6 py-12">
@@ -93,15 +95,15 @@ export default async function CoursePage(
           <p className="text-sm font-medium text-slate-500">
             {course.provider.name}
           </p>
+
           <h1 className="mt-2 text-4xl font-semibold tracking-tight">
             {course.name}
           </h1>
-          <p className="mt-4 max-w-2xl text-slate-700">
-            {course.description}
-          </p>
+
+          <p className="mt-4 max-w-2xl text-slate-700">{course.description}</p>
         </header>
 
-        {/* Image with capped height for better mobile UX */}
+        {/* ✅ Image addon: capped height for better mobile UX */}
         <section aria-label="Course image">
           <div className="overflow-hidden rounded-2xl border border-slate-200">
             <Image
