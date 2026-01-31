@@ -36,6 +36,7 @@ const COURSES: Course[] = [
   },
 ];
 
+// Mock “fetch”
 export async function getAllCourses(): Promise<Course[]> {
   return COURSES;
 }
